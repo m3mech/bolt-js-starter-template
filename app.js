@@ -6,17 +6,12 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-
-// Slack & OpenAI config
+// Slack config
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   appToken: process.env.SLACK_APP_TOKEN,
   socketMode: true,
 });
-
-const openai = new OpenAIApi(new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-}));
 
 // Memory per job channel
 const jobMemory = {};
@@ -52,7 +47,7 @@ app.event('app_mention', async ({ event, client, say }) => {
     memory.equipment = [];
     memory.status = 'active';
     memory.lastPrompt = 'jobType';
-    await say(`\uD83D\uDC77 Got it — kicking off job check-in.\nWhat kind of job is this? (Install / Service / PM)`);
+    await say(`👷 Got it — kicking off job check-in.\nWhat kind of job is this? (Install / Service / PM)`);
     return;
   }
 
@@ -84,13 +79,12 @@ Phase: ${memory.phase || 'unknown'}
 
 Reply as M3AI to move the job forward. Keep it short and real.`;
 
- const completion = await openai.chat.completions.create({
-  model: "gpt-4",
-  messages: [{ role: "user", content: prompt }],
-});
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }],
+    });
 
-
-    const reply = completion.data.choices[0].message.content;
+    const reply = completion.choices[0].message.content;
     await say(reply);
 
   } catch (err) {
@@ -103,3 +97,4 @@ Reply as M3AI to move the job forward. Keep it short and real.`;
   await app.start();
   console.log('⚡️ M3AI running with GPT brain + job memory');
 })();
+
