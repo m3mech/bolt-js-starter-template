@@ -41,7 +41,6 @@ app.event('app_mention', async ({ event, say }) => {
     }
 
     await say(`👋 I’m M3AI — your job assistant. Type \`start job\`, \`done\`, or a job type like \`install\`, \`service\`, or \`pm\` to continue.`);
-
   } catch (error) {
     console.error("Error responding to app_mention:", error);
   }
