@@ -5,6 +5,17 @@ const app = new App({
   appToken: process.env.SLACK_APP_TOKEN,
   socketMode: true,
 });
+app.event('app_mention', async ({ event, client, say }) => {
+  try {
+    console.log("Event received:", event);
+
+    // Basic reply to confirm it’s working
+    await say(`👋 What's up <@${event.user}>? I heard you say: "${event.text}"`);
+
+  } catch (error) {
+    console.error("Error responding to app_mention:", error);
+  }
+});
 
 app.event('app_mention', async ({ event, say }) => {
   const text = event.text.toLowerCase();
@@ -30,4 +41,8 @@ app.event('app_mention', async ({ event, say }) => {
 (async () => {
   await app.start();
   console.log('⚡️ M3AI connected to Slack via Socket Mode');
+})();
+(async () => {
+  await app.start();
+  console.log('⚡️ M3AI is running');
 })();
