@@ -7,27 +7,27 @@ const app = new App({
 });
 
 app.event('app_mention', async ({ event, say }) => {
-  const text = event.text.toLowerCase();
+  try {
+    console.log("Event received:", event);
+    const text = event.text.toLowerCase();
 
-  if (text.includes("test")) {
-    await say(`✅ M3AI is live and listening.`);
-    return;
+    if (text.includes("test")) {
+      await say(`✅ M3AI is live and listening.`);
+    } else if (text.includes("start job") || text.includes("new job")) {
+      await say(`👷‍♂️ Got it — kicking off job check-in now.\nWhat kind of job is this? (Install / Service / PM)`);
+    } else if (text.includes("done") || text.includes("complete")) {
+      await say(`📦 Wrapping this job. I’ll log the info and notify Maranda if anything’s missing.`);
+    } else {
+      await say(`👋 I’m M3AI — your job assistant. Type \`start job\`, \`done\`, or \`test\` to begin.`);
+    }
+
+  } catch (error) {
+    console.error("Error responding to app_mention:", error);
   }
-
-  if (text.includes("start job") || text.includes("new job")) {
-    await say(`👷‍♂️ Got it — kicking off job check-in now.\nWhat kind of job is this? (Install / Service / PM)`);
-    return;
-  }
-
-  if (text.includes("done") || text.includes("complete")) {
-    await say(`📦 Wrapping this job. I’ll log the info and notify Maranda if anything’s missing.`);
-    return;
-  }
-
-  await say(`👋 I’m M3AI — your job assistant. Type \`start job\`, \`done\`, or \`test\` to begin.`);
 });
 
+// ✅ ONLY ONE startup block
 (async () => {
   await app.start();
-  console.log('⚡️ M3AI connected to Slack via Socket Mode');
+  console.log('⚡️ M3AI is running via Socket Mode');
 })();
