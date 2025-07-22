@@ -1,6 +1,11 @@
 // app.js
 const { App } = require('@slack/bolt');
-const { Configuration, OpenAIApi } = require("openai");
+const OpenAI = require("openai");
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
 
 // Slack & OpenAI config
 const app = new App({
@@ -79,10 +84,11 @@ Phase: ${memory.phase || 'unknown'}
 
 Reply as M3AI to move the job forward. Keep it short and real.`;
 
-    const completion = await openai.createChatCompletion({
-      model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
-    });
+ const completion = await openai.chat.completions.create({
+  model: "gpt-4",
+  messages: [{ role: "user", content: prompt }],
+});
+
 
     const reply = completion.data.choices[0].message.content;
     await say(reply);
